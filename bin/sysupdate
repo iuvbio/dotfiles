@@ -1,0 +1,86 @@
+#!/bin/bash
+
+RED="\033[1;31m"
+GREEN="\033[1;32m"
+NOCOLOR="\033[0m"
+LOGFILE="$HOME/.logs/sysupdate.log"
+
+tolog() {
+    STEP="$1"
+    MSG="$2"
+
+    echo -e "$(date) step $STEP: ${GREEN}${MSG}${NOCOLOR}"
+    echo "$(date) step $STEP: $MSG" >> "$LOGFILE"
+}
+
+error_exit() {
+    STEP="$1"
+    MSG="$2"
+
+    echo -e "$(date) step $STEP ERROR: ${RED}${MSG}${NOCOLOR}" 1>&2
+    echo "$(date) step $STEP ERROR: $MSG" >> "$LOGFILE"
+    exit 1
+}
+
+# handle command line options
+if [[ $1 == "-h" ]]; then
+    echo "usage: $0"
+    echo " -h prints help"
+
+    exit 1
+fi
+
+# step 0
+echo "Checking for root access.."
+if [[ "$EUID" = 0 ]]; then
+    tolog 0 "already root"
+else
+    sudo -k # make sure to ask for password on next sudo
+    if sudo true; then
+        tolog 0 "correct password"
+    else
+        error_exit 0 "wrong password"
+    fi
+fi
+
+# step 1
+tolog 1 "pre-configuring packages"
+if ! sudo dpkg --configure -a; then
+    error_exit 1 "an error ocurred during pre-configuration"
+fi
+
+# step 2
+tolog 2 "fix and attempt to correct a system with broken dependencies"
+if ! sudo apt-get install -f; then
+    error_exit 2 "an error ocurred while trying to fix dependencies"
+fi
+
+# step 3
+tolog 3 "update apt cache"
+if ! sudo apt-get update; then
+    error_exit 3 "an error ocurred during update"
+fi
+
+# step 4
+tolog 4 "upgrade packages"
+if ! sudo apt-get upgrade; then
+    error_exit 4 "an error ocurred while upgrading"
+fi
+
+# step 5
+tolog 5 "distribution upgrade"
+if ! sudo apt-get dist-upgrade; then
+    error_exit 5 "an error ocurred during dist-upgrade"
+fi
+
+# step 6
+tolog 6 "remove unused packages"
+if ! sudo apt-get --purge autoremove; then
+    error_exit 6 "an error ocurred during autoremove"
+fi
+
+# step 7
+tolog 7 "clean up"
+if ! sudo apt-get autoclean; then
+    error_exit 7 "an error ocurred during autoclean"
+fi

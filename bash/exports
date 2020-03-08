@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+SYSTEM_NAME=$(uname -s)
+export SYSTEM_NAME
+
+export EDITOR='nano'
+
+export GIT_EDITOR=$EDITOR
+export VISUAL=$EDITOR
+
+export GREP_OPTIONS='--color=auto'
+export GREP_COLOR='0;32'
+# grep 2.9+
+export GREP_COLORS="ms=00;32:mc=01;31:sl=:cx=:fn=01;34:ln=0;33:bn=32:se=36"
+export CLICOLOR=1
+
+export LESS=-R
+# export HISTIGNORE="&:[ ]*:exit:atom*:rm:cd:dc:npm[ ]*:gs:gco[ ]*:j[ ]*:cat:type:touch:mv:ls:la:history"
+
+export HH_CONFIG=hicolor         # get more colors
+# append to the history file, don't overwrite it
+shopt -s histappend
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+export HISTCONTROL=ignoreboth
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+# if this is interactive shell, then bind hh to Ctrl-r (for Vi mode check doc)
+if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hh -- \C-j"'; fi
+# if this is interactive shell, then bind 'kill last command' to Ctrl-x k
+if [[ $- =~ .*i.* ]]; then bind '"\C-xk": "\C-a hh -k \C-j"'; fi
+
+if ls --color -d . >/dev/null 2>&1; then
+  export GNU_LS=1
+  export LS_OPTIONS=--color=auto
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  # eval `dircolors -b ~/.dir_colors`
+elif ls -G -d . >/dev/null 2>&1; then
+  export BSD_LS=1
+  export LS_OPTIONS=-G
+  export LSCOLORS=ExFxCxDxBxegedabagacad
+fi

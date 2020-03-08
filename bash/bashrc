@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+NICE_HOSTNAME=$(hostname -f)
+SHORT_HOST=$(hostname -s)
+export NICE_HOSTNAME
+export SHORT_HOST
+
+test -f ~/.config/bash/exports && . $_
+test -f ~/.config/bash/colors && . $_
+test -f ~/.config/git/gitrc && . $_
+test -f ~/.config/bash/aliases && . $_
+test -f ~/.config/bash/prompt && . $_
+
+# the default umask is set in /etc/profile; for setting the umask
+# for ssh logins, install and configure the libpam-umask package.
+#umask 022
+
+# readline settings
+bind "set completion-ignore-case on"
+bind "set bell-style none" # No bell, because it's damn annoying
+bind "set show-all-if-ambiguous On" # this allows you to automatically show completion without double tab-ing
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+shopt -s globstar 2>/dev/null # Bash 4 and above only
+
+# make less more friendly for non-text input files, see lesspipe(1)
+#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# setup bash completions
+# enable programmable completion features
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# make less more friendly for non-text input files, see lesspipe(1)
+#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/diosos/bin/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/diosos/bin/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/diosos/bin/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/diosos/bin/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<

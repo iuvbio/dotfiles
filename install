@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+currdir="$PWD"
+homebin="$HOME/bin"
+confdir="$HOME/.config"
+
+error_exit() {
+	msg="$1"
+	echo -e "ERROR: ${msg}" 1>&2
+	exit 1
+}
+
+relink_file() {
+  src="$1"
+  trgt="$2"
+
+  if [ -f "$trgt" ]; then
+    echo "$trgt exists, creating backup"
+    cp "$trgt" "$trgt.bak" || error_exit "error backing up $trgt"
+    rm "$trgt"
+  fi
+
+  ln -s "$src" "$trgt"
+}
+
+# update home bin
+chmod -R 0755 bin/
+rsync -pru bin/ "$homebin/"
+# update config
+rsync -ru "$currdir/bash/" "$confdir/bash/"
+rsync -ru "$currdir/conda/" "$confdir/conda/"
+
+# set up bash links
+relink_file "$confdir/bash/bashrc" "$HOME/.bashrc"
+relink_file "$confdir/bash/bash_profile" "$HOME/.bash_profile"
+relink_file "$confdir/bash/ls/dir_colors" "$HOME/.dircolors"
+
+# set up conda links
+relink_file "$confdir/conda/condarc" "$HOME/.condarc"

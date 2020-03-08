@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# firefox_upgrade - program to upgrade firefox quantum
+
+red="\033[1;31m"
+yellow="\033[1;33m"
+green="\033[1;32m"
+nocolor="\033[0m"
+
+error_exit() {
+	msg="$1"
+	echo -e "$(date) ${red}ERROR:${nocolor} ${msg}" 1>&2
+    logger "ERROR: $msg"
+	exit 1
+}
+
+warning() {
+    msg="$1"
+    echo -e "$(date) ${yellow}WARNING:${nocolor} ${msg}"
+    logger "WARNING: $msg"
+}
+
+success() {
+    msg="$1"
+    echo -e "$(date) ${green}SUCCESS:${nocolor} ${msg}"
+    logger "SUCCESS: $msg"
+}
+
+ffbin="/opt/firefox"
+fflink="/usr/bin/firefox-quantum"
+
+ffpath=
+fffile=
+
+# check if path argument was provided
+if [ $# -ne 1 ]; then
+    error_exit "usage: $0 firefox_quantum_path"
+fi
+
+echo "Checking for root access.."
+if [[ "$EUID" = 0 ]]; then
+    success "already root"
+else
+    sudo -k # make sure to ask for password on next sudo
+    if sudo true; then
+        success "correct password"
+    else
+        error_exit "wrong password"
+    fi
+fi
+
+# parsing path and filename
+ffpath="$1"
+fffile="${ffpath##*/}"
+
+# check if input is a valid file
+if [ ! -f "$ffpath" ]; then
+    error_exit "Invalid file! Aborting."
+fi
+
+# check the firefox version
+ffpref="${fffile%.*}"
+ffversion="${ffpref//[^0-9]/}"
+ffinstalled_version="$($fflink --version | sed 's/[^0-9]*//g')"
+
+vind=0
+if [[ "$ffversion" < "$ffinstalled_version" ]]; then
+    warning "The version to be installed is lower than the installed version"
+    vind=1
+elif [[ "$ffversion" = "$ffinstalled_version" ]]; then
+    warning "The version to be installed is the same as the installed version"
+    vind=1
+fi
+
+if [[ "$vind" = 1 ]]; then
+    echo "Do you want to continue anyway?"
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) : ;;
+            No ) exit;;
+        esac
+    done
+fi
+
+# removing previous install, if existent
+if [ -e "$ffbin" ]; then
+    sudo rm -rf "$ffbin"
+    #mv "$ffbin" "$ffbin.old"
+    success "removed previous install"
+else
+    warning "$ffbin doesn't exist."
+fi
+
+# removing previous symlink, if existent
+if [ -L "$fflink" ]; then
+    sudo rm -f "$fflink"
+    success "removed previous symlink"
+else
+    warning "$fflink doesn't exist."
+fi
+
+# copying the tar to /opt
+if ! sudo rsync -ah --progress "$ffpath" "/opt/$fffile"; then
+    error_exit "Couldn't copy the tarball. Aborting."
+fi
+success "tarball copied"
+
+# unpacking the tar if successfully changed directory
+if ! sudo tar -jxvf "/opt/$fffile" -C /opt; then
+    error_exit "Could not extract file! Aborting."
+fi
+success "tarball was extracted"
+
+# if unpack was successful, set permissions, create symlink, and remove tar
+sudo chmod 755 "$ffbin"
+success "permissions set"
+sudo ln -s "$ffbin/firefox" "$fflink"
+success "symlink created"
+sudo rm "/opt/$fffile"
+success "tarball removed from /opt"
+success "Firefox was upgraded"
