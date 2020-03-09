@@ -32,7 +32,7 @@ rsync -ru "$currdir/conda/" "$confdir/conda/"
 
 # set up bash links
 relink_file "$confdir/bash/bashrc" "$HOME/.bashrc"
-relink_file "$confdir/bash/bash_profile" "$HOME/.bash_profile"
+relink_file "$confdir/bash/profile" "$HOME/.profile"
 relink_file "$confdir/bash/ls/dir_colors" "$HOME/.dircolors"
 
 # set up conda links
