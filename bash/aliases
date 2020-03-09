@@ -39,15 +39,15 @@ alias t='tail'
 alias tf='tail -F'
 
 # some more ls aliases
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
 #alias ll='ls -l'
 #alias la='ls -A'
 #alias l='ls -CF'
-
-#alias dir='dir --color=auto'
-#alias vdir='vdir --color=auto'
-#alias grep='grep --color=auto'
-#alias fgrep='fgrep --color=auto'
-#alias egrep='egrep --color=auto'
 
 # custom aliases
 alias upup="sudo apt update && sudo apt upgrade"
