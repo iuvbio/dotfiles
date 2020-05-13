@@ -53,7 +53,7 @@ alias egrep='egrep --color=auto'
 alias upup="sudo apt update && sudo apt upgrade"
 alias pua="pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 alias jkyll="bundle exec jekyll"
-alias vactivate="source venv/bin/activate"
+alias vactivate="conda deactivate && source venv/bin/activate"
 
 function ikernel() {
   python -m ipykernel install --user --name="$1"
