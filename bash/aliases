@@ -54,3 +54,19 @@ alias upup="sudo apt update && sudo apt upgrade"
 alias pua="pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U"
 alias jkyll="bundle exec jekyll"
 alias vactivate="source venv/bin/activate"
+
+function ikernel() {
+  python -m ipykernel install --user --name="$1"
+}
+
+function sagtag() {
+  if test "$#" -gt 1; then
+    echo -e "usage $0 [date]"
+    return
+  elif test "$1"; then
+    tagdate="$1"
+  else
+    tagdate="$(date)"
+  fi
+  date -d "$tagdate" +"%d of %B is day %-j of %Y in week %-V"
+}
