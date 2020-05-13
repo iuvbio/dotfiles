@@ -63,7 +63,7 @@ function sagtag() {
   if test "$#" -gt 1; then
     echo -e "usage $0 [date]"
     return
-  elif test "$1"; then
+  elif test -n "$1"; then
     tagdate="$1"
   else
     tagdate="$(date)"
