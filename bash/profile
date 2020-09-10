@@ -17,6 +17,11 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
+# set OATH to include .local/bin - added by Lukas
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
 # include user global npm dir - added by Lukas
 if [ -d "$HOME/.npm-global" ] ; then
     PATH="$HOME/.npm-global/bin:$PATH"
