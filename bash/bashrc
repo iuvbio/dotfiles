@@ -48,6 +48,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# set up fzf -- check if this is correct
+export FZF_DEFAULT_COMMAND="rg --files --follow --glob '!.git'"
+
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
