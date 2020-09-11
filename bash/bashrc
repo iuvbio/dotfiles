@@ -48,8 +48,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# set up fzf -- check if this is correct
-export FZF_DEFAULT_COMMAND="rg --files --follow --glob '!.git'"
+# set up fzf
+source /usr/share/doc/fzf/examples/key-bindings.bash
+
+export FZF_DEFAULT_COMMAND="rg --files --follow --glob '!.git' --glob '!venv'"
+export FZF_DEFAULT_OPTS="-m"
 
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
