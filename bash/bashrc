@@ -52,7 +52,7 @@ fi
 source /usr/share/doc/fzf/examples/key-bindings.bash
 
 export FZF_DEFAULT_COMMAND="rg --files --follow --glob '!.git' --glob '!venv'"
-export FZF_DEFAULT_OPTS="-m"
+export FZF_DEFAULT_OPTS="-m --height 50% --border"
 
 # make less more friendly for non-text input files, see lesspipe(1)
 #[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
