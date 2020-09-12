@@ -15,11 +15,12 @@ SHORT_HOST=$(hostname -s)
 export NICE_HOSTNAME
 export SHORT_HOST
 
-test -f ~/.config/bash/exports && . $_
-test -f ~/.config/bash/colors && . $_
-test -f ~/.config/git/gitrc && . $_
-test -f ~/.config/bash/aliases && . $_
-test -f ~/.config/bash/prompt && . $_
+test -f "$HOME/.config/bash/exports" && . $_
+test -f "$HOME/.config/bash/colors" && . $_
+test -f "$HOME/.config/git/gitrc" && . $_
+test -f "$HOME/.config/bash/aliases" && . $_
+test -f "$HOME/.config/bash/prompt" && . $_
+test -f "$HOME/.config/bash/fzf.bash" && . $_
 
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
@@ -49,7 +50,8 @@ if ! shopt -oq posix; then
 fi
 
 # set up fzf
-source /usr/share/doc/fzf/examples/key-bindings.bash
+# this is for the apt version
+#source /usr/share/doc/fzf/examples/key-bindings.bash
 
 export FZF_DEFAULT_COMMAND="rg --files --follow --glob '!.git' --glob '!venv'"
 export FZF_DEFAULT_OPTS="-m --height 50% --border"
