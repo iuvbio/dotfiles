@@ -1,7 +1,7 @@
 # Setup fzf
 # ---------
-#if [[ ! "$PATH" == */home/diosos/src/fzf/bin* ]]; then
-#  export PATH="${PATH:+${PATH}:}/home/diosos/src/fzf/bin"
+#if [[ ! "$PATH" == *$HOME/src/fzf/bin* ]]; then
+#  export PATH="${PATH:+${PATH}:}$HOME/src/fzf/bin"
 #fi
 
 # Auto-completion
