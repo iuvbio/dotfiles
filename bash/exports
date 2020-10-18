@@ -3,7 +3,7 @@
 SYSTEM_NAME=$(uname -s)
 export SYSTEM_NAME
 
-export EDITOR='nano'
+export EDITOR='vim'
 
 export GIT_EDITOR=$EDITOR
 export VISUAL=$EDITOR
