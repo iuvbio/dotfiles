@@ -5,22 +5,22 @@ homebin="$HOME/bin"
 confdir="$HOME/.config"
 
 error_exit() {
-	msg="$1"
-	echo -e "ERROR: ${msg}" 1>&2
-	exit 1
+  msg="$1"
+  echo -e "ERROR: ${msg}" 1>&2
+  exit 1
 }
 
 relink_file() {
   src="$1"
-  trgt="$2"
+  target="$2"
 
-  if [ -f "$trgt" ]; then
-    echo "$trgt exists, creating backup"
-    cp "$trgt" "$trgt.bak" || error_exit "error backing up $trgt"
-    rm "$trgt"
+  if [ -f "$target" ]; then
+    echo "$target exists, creating backup"
+    cp "$target" "$target.bak" || error_exit "error backing up $target"
+    rm "$target"
   fi
 
-  ln -s "$src" "$trgt"
+  ln -s "$src" "$target"
 }
 
 # update home bin
@@ -29,6 +29,7 @@ rsync -pru bin/ "$homebin/"
 # update config
 rsync -ru "$currdir/bash/" "$confdir/bash/"
 rsync -ru "$currdir/conda/" "$confdir/conda/"
+rsync -ru "$currdir/vim/" "$confdir/vim/"
 
 # set up bash links
 relink_file "$confdir/bash/bashrc" "$HOME/.bashrc"
@@ -37,3 +38,10 @@ relink_file "$confdir/bash/ls/dir_colors" "$HOME/.dircolors"
 
 # set up conda links
 relink_file "$confdir/conda/condarc" "$HOME/.condarc"
+
+# set up vim links
+relink_file "$confdir/vim/vimrc" "$HOME/.vimrc"
+
+# set up fzf links
+relink_file "$HOME/.opt/fzf/bin/fzf" "$homebin/fzf"
+relink_file "$HOME/.opt/fzf/bin/fzf-tmux" "$homebin/fzf-tmux"
