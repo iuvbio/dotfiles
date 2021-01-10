@@ -84,3 +84,9 @@ tolog 7 "clean up"
 if ! sudo apt-get autoclean; then
     error_exit 7 "an error ocurred during autoclean"
 fi
+
+# step 8
+tolog 8 "update flatpak"
+if ! flatpak update; then
+    error_exit 8 "an error ocurred during flatpak update"
+fi
