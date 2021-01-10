@@ -23,6 +23,11 @@ relink_file() {
   ln -s "$src" "$target"
 }
 
+# create .config if not existent
+if ! test -d "$confdir"; then
+    mkdir "$confdir"
+fi
+
 # update home bin
 chmod -R 0755 bin/
 rsync -pru bin/ "$homebin/"
