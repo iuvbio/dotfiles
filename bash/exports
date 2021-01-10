@@ -9,7 +9,7 @@ export GIT_EDITOR=$EDITOR
 export VISUAL=$EDITOR
 
 # this is needed for kitty. should check if location is generic.
-export TERMCONF="/usr/share/terminfo"
+export TERMINFO="/usr/share/terminfo"
 
 # export GREP_OPTIONS='--color=auto'  # deprecated
 export GREP_COLOR='0;32'
